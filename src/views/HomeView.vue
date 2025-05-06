@@ -1,162 +1,146 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import Summoner from '../components/Summoner.vue';
-import { getSummonerByRiotId } from '../services/otpbuildService';
-import type { Summoner as SummonerType } from '../types';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const gameName = ref('');
-const tagLine = ref('');
-const summoner = ref<SummonerType | null>(null);
-const loading = ref(false);
-const error = ref('');
+const router = useRouter()
+const searchInput = ref('')
 
-async function searchSummoner() {
-  if (!gameName.value || !tagLine.value) {
-    error.value = 'Please enter both Game Name and Tag Line';
-    return;
+function searchSummoner() {
+  if (!searchInput.value) {
+    return
   }
 
-  loading.value = true;
-  error.value = '';
-
-  try {
-    summoner.value = await getSummonerByRiotId(gameName.value, tagLine.value);
-  } catch (err) {
-    error.value = 'Failed to fetch summoner data';
-    console.error(err);
-    summoner.value = null;
-  } finally {
-    loading.value = false;
+  // Split the input by # to get gameName and tagLine
+  const parts = searchInput.value.split('#')
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    // Handle invalid input format
+    alert('Please enter a valid format: GameName#TagLine')
+    return
   }
+
+  const gameName = parts[0]
+  const tagLine = parts[1]
+
+  router.push({
+    name: 'summonerByRiotId',
+    params: {
+      gameName: gameName,
+      tagLine: tagLine,
+    },
+  })
+
+  // Reset form after submission
+  searchInput.value = ''
 }
 </script>
 
 <template>
   <main>
-    <h1>OTP Build</h1>
+    <div class="welcome-container">
+      <h1>Welcome to OTP Build</h1>
+      <p class="welcome-text">
+        Explore top-tier champion builds and stats from the best one-trick ponies in League of
+        Legends. Focused insights, real data.
+      </p>
 
-    <div class="search-container">
-      <h2>Search Summoner</h2>
-      <div class="search-form">
-        <div class="form-group">
-          <label for="gameName">Game Name</label>
+      <div class="search-container">
+        <div class="search-form">
           <input
-            id="gameName"
-            v-model="gameName"
+            v-model="searchInput"
             type="text"
-            placeholder="Enter game name"
+            placeholder="Search for a player..."
+            @keyup.enter="searchSummoner"
           />
         </div>
-
-        <div class="form-group">
-          <label for="tagLine">Tag Line</label>
-          <input
-            id="tagLine"
-            v-model="tagLine"
-            type="text"
-            placeholder="Enter tag line"
-          />
-        </div>
-
-        <button @click="searchSummoner" :disabled="loading">
-          {{ loading ? 'Searching...' : 'Search' }}
-        </button>
       </div>
-
-      <p v-if="error" class="error">{{ error }}</p>
-    </div>
-
-    <div v-if="summoner" class="summoner-container">
-      <Summoner :summoner="summoner" />
     </div>
   </main>
 </template>
 
 <style scoped>
 main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+}
+
+.welcome-container {
+  max-width: 800px;
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #242424;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 h1 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.search-container {
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  font-size: 2.75rem;
+  margin-bottom: 1.5rem;
+  background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
+  /*-webkit-linear-gradient(315deg, #C95792 25%, #F8B55F)*/
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
 h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  margin: 0;
+  background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
+  /*-webkit-linear-gradient(315deg, #C95792 25%, #F8B55F)*/
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+}
+
+.welcome-text {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.87);
+  margin-bottom: 2rem;
+}
+
+.search-container {
+  margin-top: 2rem;
+  width: 100%;
 }
 
 .search-form {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: flex-end;
+  max-width: 600px;
+  margin: 0 auto;
+  gap: 0.75rem;
 }
 
-.form-group {
+.search-form input {
   flex: 1;
-  min-width: 200px;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+.search-form input:focus {
+  outline: none;
+  /*
+  border-color: rgba(66, 184, 131, 0.55);
+  */
+  box-shadow: 0 0 5px 3px rgba(0, 255, 143, 0.38);
 }
 
-input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 0.5rem 1rem;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-.error {
-  color: red;
-  margin-top: 1rem;
-}
-
-.summoner-container {
-  margin-top: 2rem;
-}
-
-@media (max-width: 768px) {
-  .search-form {
-    flex-direction: column;
-  }
-
-  .form-group {
-    width: 100%;
-  }
+.search-form input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 </style>

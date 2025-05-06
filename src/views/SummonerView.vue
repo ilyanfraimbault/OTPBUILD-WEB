@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Summoner from '../components/Summoner.vue';
 import { getSummonerByRiotId, getSummonerByPuuid } from '../services/otpbuildService';
@@ -10,7 +10,12 @@ const summoner = ref<SummonerType | null>(null);
 const loading = ref(true);
 const error = ref('');
 
-onMounted(async () => {
+// Function to fetch summoner data based on route params
+async function fetchSummonerData() {
+  loading.value = true;
+  error.value = '';
+  summoner.value = null;
+
   try {
     // Check which route parameters are available
     if (route.params.puuid) {
@@ -31,7 +36,14 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
-});
+}
+
+// Fetch data when component is mounted
+onMounted(fetchSummonerData);
+
+// Watch for changes in route params and re-fetch data when they change
+watch(() => route.params, fetchSummonerData, { deep: true });
+
 </script>
 
 <template>
@@ -41,7 +53,10 @@ onMounted(async () => {
     </div>
 
     <div v-else-if="error" class="error">
-      {{ error }}
+      <div class="error-content">
+        <div class="error-icon">⚠️</div>
+        <div class="error-message">{{ error }}</div>
+      </div>
     </div>
 
     <div v-else-if="summoner" class="summoner-container">
@@ -56,12 +71,11 @@ onMounted(async () => {
 
 <style scoped>
 .summoner-view {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  padding: 30px;
 }
 
-.loading, .error, .not-found {
+.loading, .not-found {
   text-align: center;
   padding: 2rem;
   background-color: #f5f5f5;
@@ -70,7 +84,31 @@ onMounted(async () => {
 }
 
 .error {
-  color: red;
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #242424;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #ff5252;
+  box-shadow: 0 4px 8px rgba(255, 82, 82, 0.1);
+}
+
+.error-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.error-icon {
+  font-size: 2rem;
+}
+
+.error-message {
+  color: #ff5252;
+  font-weight: 500;
+  font-size: 1.1rem;
 }
 
 .summoner-container {

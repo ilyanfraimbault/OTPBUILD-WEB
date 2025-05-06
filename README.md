@@ -1,6 +1,21 @@
-# otpbuildweb
+# OTP Build
 
-This template should help get you started developing with Vue 3 in Vite.
+OTP Build is a web application for League of Legends players to explore top-tier champion builds and stats from the best one-trick ponies (OTPs). The application provides focused insights based on real data from high-level players who specialize in specific champions.
+
+## Features
+
+- Search for League of Legends players by their Riot ID (GameName#TagLine)
+- View detailed champion builds and statistics from one-trick pony players
+- Get insights on optimal item builds, runes, and playstyles for specific champions
+- User-friendly interface with responsive design
+
+## Technologies Used
+
+- Vue 3 with Composition API
+- TypeScript
+- Vite
+- Axios for API requests
+- Vue Router
 
 ## Recommended IDE Setup
 

@@ -28,3 +28,15 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+/tsconfig.app.json
+/tsconfig.json
+/tsconfig.node.json
+/vite.config.ts
+/.editorconfig
+/.gitattributes
+/.vscode/
+/.prettierrc.json
+/env.d.ts
+/eslint.config.ts
+/package.json
+/package-lock.json

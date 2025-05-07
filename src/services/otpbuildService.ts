@@ -29,3 +29,14 @@ export async function getSummonerByPuuid(puuid: string): Promise<Summoner> {
   return response.data;
 }
 
+/**
+ * Search for summoners matching a given query.
+ * @param query - The search string to find summoners.
+ * @returns A promise containing a list of summoners matching the query.
+ */
+export async function searchSummonerByQuery(query: string): Promise<Summoner[]> {
+  const response = await axios.get<Summoner[]>(
+    `/Summoners/search?query=${encodeURIComponent(query)}`
+  );
+  return response.data;
+}

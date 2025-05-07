@@ -1,39 +1,23 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
+import SearchBar from '@/components/SearchBar.vue';
 
 const router = useRouter();
 const route = useRoute();
-const searchInput = ref('');
 
-// Check if we're on the home page
 const isHomePage = computed(() => {
   return route.name === 'home';
 });
 
-function searchByRiotId() {
-  if (!searchInput.value) {
-    return;
-  }
-
-  // Split the input by # to get gameName and tagLine
-  const parts = searchInput.value.split('#');
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    return;
-  }
-
-  const gameName = parts[0];
-  const tagLine = parts[1];
-
+function handleSearch(data: { gameName: string, tagLine: string }) {
   router.push({
     name: 'summonerByRiotId',
     params: {
-      gameName: gameName,
-      tagLine: tagLine
+      gameName: data.gameName,
+      tagLine: data.tagLine
     }
   });
-
-  searchInput.value = '';
 }
 </script>
 
@@ -46,17 +30,12 @@ function searchByRiotId() {
             <h2>OTP Build</h2>
           </RouterLink>
         </div>
-        <div v-if="!isHomePage" class="search-container">
-            <div class="form-group">
-              <input
-                id="searchInput"
-                v-model="searchInput"
-                type="text"
-                placeholder="Search for a player..."
-                @keyup.enter="searchByRiotId"
-              />
-          </div>
-        </div>
+        <SearchBar
+          v-if="!isHomePage"
+          variant="header"
+          width="500px"
+          @search="handleSearch"
+        />
         <div class="nav-container">
           <nav>
             <RouterLink to="/" class="nav-link">Home</RouterLink>
@@ -115,14 +94,13 @@ header {
   text-decoration: none;
 }
 
-.logo .router-link-active {
-  border-bottom: none;
-}
-
 .logo h1, .logo h2 {
   font-size: 1.5rem;
   margin: 0;
+  /*
   background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
+  */
+  background: -webkit-linear-gradient(315deg, #C95792 25%, #F8B55F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -151,58 +129,12 @@ nav {
 }
 
 .nav-link:hover {
-  color: #42d392;
+  color: #e18878;
   transform: translateY(-1px);
   transition: all 0.2s ease-in-out;
 }
-.search-container {
-  display: flex;
-  align-items: center;
-  margin: 0 1rem;
-}
 
-.form-group {
-  width: 500px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.6rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  background-color: #242424;
-  color: rgba(255, 255, 255, 0.87);
-  transition: all 0.3s ease;
-}
-
-.form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #42b883;
-  background-color: #242424;
-  box-shadow: 0 0 0 2px rgba(66, 184, 131, 0.3);
-}
-
-.search-submit {
-  background-color: #42b883;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-}
-
-.search-submit:hover {
-  background-color: #3aa876;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(66, 184, 131, 0.5);
-}
+/* Search bar styling moved to SearchBar component */
 
 main {
   flex: 1;
@@ -220,31 +152,4 @@ footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@media (max-width: 768px) {
-  .menu-bar {
-    flex-direction: column;
-    padding: 1rem;
-    gap: 0.75rem;
-  }
-
-  .nav-container {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .search-container {
-    width: 100%;
-    margin: 0.5rem 0;
-    justify-content: center;
-  }
-
-  .form-group {
-    width: 100%;
-  }
-
-  nav {
-    margin-top: 0;
-    justify-content: center;
-  }
-}
 </style>

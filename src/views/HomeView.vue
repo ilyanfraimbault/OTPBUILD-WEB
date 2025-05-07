@@ -1,36 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import SearchBar from '@/components/SearchBar.vue'
 
 const router = useRouter()
-const searchInput = ref('')
 
-function searchSummoner() {
-  if (!searchInput.value) {
-    return
-  }
-
-  // Split the input by # to get gameName and tagLine
-  const parts = searchInput.value.split('#')
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    // Handle invalid input format
-    alert('Please enter a valid format: GameName#TagLine')
-    return
-  }
-
-  const gameName = parts[0]
-  const tagLine = parts[1]
-
+function handleSearch(data: { gameName: string, tagLine: string }) {
   router.push({
     name: 'summonerByRiotId',
     params: {
-      gameName: gameName,
-      tagLine: tagLine,
+      gameName: data.gameName,
+      tagLine: data.tagLine,
     },
   })
-
-  // Reset form after submission
-  searchInput.value = ''
 }
 </script>
 
@@ -43,16 +24,10 @@ function searchSummoner() {
         Legends. Focused insights, real data.
       </p>
 
-      <div class="search-container">
-        <div class="search-form">
-          <input
-            v-model="searchInput"
-            type="text"
-            placeholder="Search for a player..."
-            @keyup.enter="searchSummoner"
-          />
-        </div>
-      </div>
+      <SearchBar
+        variant="home"
+        @search="handleSearch"
+      />
     </div>
   </main>
 </template>
@@ -83,8 +58,10 @@ main {
 h1 {
   font-size: 2.75rem;
   margin-bottom: 1.5rem;
+  /*
   background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
-  /*-webkit-linear-gradient(315deg, #C95792 25%, #F8B55F)*/
+  */
+  background: -webkit-linear-gradient(315deg, #C95792 25%, #F8B55F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -94,8 +71,10 @@ h1 {
 h2 {
   font-size: 1.5rem;
   margin: 0;
+  /*
   background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
-  /*-webkit-linear-gradient(315deg, #C95792 25%, #F8B55F)*/
+  */
+  background: -webkit-linear-gradient(315deg, #C95792 25%, #F8B55F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -109,38 +88,5 @@ h2 {
   margin-bottom: 2rem;
 }
 
-.search-container {
-  margin-top: 2rem;
-  width: 100%;
-}
-
-.search-form {
-  display: flex;
-  max-width: 600px;
-  margin: 0 auto;
-  gap: 0.75rem;
-}
-
-.search-form input {
-  flex: 1;
-  padding: 0.8rem 1.2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  background-color: #1a1a1a;
-  color: rgba(255, 255, 255, 0.87);
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.search-form input:focus {
-  outline: none;
-  /*
-  border-color: rgba(66, 184, 131, 0.55);
-  */
-  box-shadow: 0 0 5px 3px rgba(0, 255, 143, 0.38);
-}
-
-.search-form input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
+/* Search bar styling moved to SearchBar component */
 </style>

@@ -29,7 +29,7 @@ export async function getSummonerIconUrl(iconId: number): Promise<string> {
     if (iconId !== 0) {
       try {
         return await fetchResource(
-          `${CDRAGON_BASE_URL}/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/0.jpg`
+          `${CDRAGON_BASE_URL}/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/29.jpg`
         );
       } catch (fallbackError) {
         console.error('Failed to fetch default icon:', fallbackError);

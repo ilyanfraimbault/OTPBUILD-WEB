@@ -4,7 +4,7 @@ import SearchBar from '@/components/SearchBar.vue'
 
 const router = useRouter()
 
-function handleSearch(data: { gameName: string, tagLine: string }) {
+function handleSearch(data: { gameName: string; tagLine: string }) {
   router.push({
     name: 'summonerByRiotId',
     params: {
@@ -23,11 +23,7 @@ function handleSearch(data: { gameName: string, tagLine: string }) {
         Explore top-tier champion builds and stats from the best one-trick ponies in League of
         Legends. Focused insights, real data.
       </p>
-
-      <SearchBar
-        variant="home"
-        @search="handleSearch"
-      />
+      <SearchBar variant="home" @search="handleSearch" />
     </div>
   </main>
 </template>
@@ -58,10 +54,7 @@ main {
 h1 {
   font-size: 2.75rem;
   margin-bottom: 1.5rem;
-  /*
-  background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
-  */
-  background: -webkit-linear-gradient(315deg, #C95792 25%, #F8B55F);
+  background: -webkit-linear-gradient(315deg, #c95792 25%, #f8b55f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -71,10 +64,7 @@ h1 {
 h2 {
   font-size: 1.5rem;
   margin: 0;
-  /*
-  background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
-  */
-  background: -webkit-linear-gradient(315deg, #C95792 25%, #F8B55F);
+  background: -webkit-linear-gradient(315deg, #c95792 25%, #f8b55f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -88,5 +78,4 @@ h2 {
   margin-bottom: 2rem;
 }
 
-/* Search bar styling moved to SearchBar component */
 </style>

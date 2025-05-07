@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
-import { computed } from 'vue';
+import { computed } from 'vue'
 import SearchBar from '@/components/SearchBar.vue';
 
 const router = useRouter();
@@ -97,9 +97,6 @@ header {
 .logo h1, .logo h2 {
   font-size: 1.5rem;
   margin: 0;
-  /*
-  background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
-  */
   background: -webkit-linear-gradient(315deg, #C95792 25%, #F8B55F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -133,8 +130,6 @@ nav {
   transform: translateY(-1px);
   transition: all 0.2s ease-in-out;
 }
-
-/* Search bar styling moved to SearchBar component */
 
 main {
   flex: 1;

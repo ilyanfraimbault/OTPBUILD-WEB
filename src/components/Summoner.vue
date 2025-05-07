@@ -14,7 +14,7 @@ const hasError = ref(false)
 onMounted(async () => {
   try {
     isLoading.value = true
-    summonerIconUrl.value = await getSummonerIconUrl(props.summoner?.profileIconId || 0)
+    summonerIconUrl.value = await getSummonerIconUrl(props.summoner?.profileIconId)
   } catch (error) {
     console.error('Error loading summoner icon:', error)
     hasError.value = true
@@ -90,10 +90,10 @@ onMounted(async () => {
 .summoner-icon {
   width: 80px;
   height: 80px;
-  border-radius: 50%;
   overflow: hidden;
   margin-right: 1.5rem;
-  border: 3px solid #4caf50;
+  border: 2px solid rgba(176, 176, 176, 0.25);
+  border-radius: 10px;
 }
 
 .summoner-icon img,

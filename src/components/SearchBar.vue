@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, type Ref } from 'vue'
+import { searchSummonerByQuery } from '@/services/otpbuildService';
+import type { Summoner } from '@/types.ts'
 
 const props = defineProps({
   placeholder: {
@@ -16,19 +18,19 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['search']);
 const searchInput = ref('');
+
+const emit = defineEmits(['search']);
+const suggestions: Ref<Summoner[]> = ref([]);
 
 function handleSearch() {
   if (!searchInput.value) {
     return;
   }
 
-  // Split the input by # to get gameName and tagLine
   const parts = searchInput.value.split('#');
   if (parts.length !== 2 || !parts[0] || !parts[1]) {
     if (props.variant === 'home') {
-      // Only show alert in home variant
       alert('Please enter a valid format: GameName#TagLine');
     }
     return;
@@ -39,8 +41,14 @@ function handleSearch() {
 
   emit('search', { gameName, tagLine });
 
-  // Reset form after submission
   searchInput.value = '';
+}
+
+async function autoComplete() {
+  if (searchInput.value.length < 3) return;
+
+  suggestions.value = await searchSummonerByQuery(searchInput.value);
+  console.log(suggestions);
 }
 </script>
 
@@ -52,6 +60,7 @@ function handleSearch() {
         type="text"
         :placeholder="placeholder"
         @keyup.enter="handleSearch"
+        @keyup="autoComplete"
       />
     </div>
   </div>

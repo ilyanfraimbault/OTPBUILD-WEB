@@ -1,76 +1,45 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, type Ref } from 'vue'
-import { searchSummonerByQuery } from '@/services/otpbuildService';
+import { ref, defineProps, type Ref } from 'vue'
+import { searchSummonerByQuery } from '@/services/otpbuildService'
+
 import type { Summoner } from '@/types.ts'
 
-const props = defineProps({
-  placeholder: {
-    type: String,
-    default: 'Search for a player...'
-  },
-  width: {
-    type: String,
-    default: '500px'
-  },
-  variant: {
-    type: String,
-    default: 'header' // 'header' or 'home'
-  }
-});
+import SummonerSuggestion from '@/components/SummonerSuggestion.vue'
 
-const searchInput = ref('');
 
-const emit = defineEmits(['search']);
-const suggestions: Ref<Summoner[]> = ref([]);
 
-function handleSearch() {
-  if (!searchInput.value) {
-    return;
-  }
+const searchInput = ref('')
 
-  const parts = searchInput.value.split('#');
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    if (props.variant === 'home') {
-      alert('Please enter a valid format: GameName#TagLine');
-    }
-    return;
-  }
-
-  const gameName = parts[0];
-  const tagLine = parts[1];
-
-  emit('search', { gameName, tagLine });
-
-  searchInput.value = '';
-}
+const suggestions: Ref<Summoner[]> = ref([])
 
 async function autoComplete() {
-  if (searchInput.value.length < 3) return;
+  if (searchInput.value === '') {
+    suggestions.value = []
+    return
+  }
 
-  suggestions.value = await searchSummonerByQuery(searchInput.value);
-  console.log(suggestions);
+  await searchSummonerByQuery(searchInput.value).then((value) => {
+    suggestions.value = value.reverse();
+    console.log(value.reverse())
+  })
 }
 </script>
 
 <template>
-  <div :class="['search-container', `search-${variant}`]">
-    <div :class="variant === 'header' ? 'form-group' : 'search-form'">
-      <input
-        v-model="searchInput"
-        type="text"
-        :placeholder="placeholder"
-        @keyup.enter="handleSearch"
-        @keyup="autoComplete"
-      />
-    </div>
+  <div class="search-form form-group">
+    <input v-model="searchInput" type="text" placeholder="Search for a player..." @keyup="autoComplete" />
+    <ul v-if="suggestions.length > 0" class="suggestions">
+      <li v-for="(summoner) in suggestions" :key="summoner.id" class="suggestion-item">
+        <SummonerSuggestion :summoner="summoner" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <style scoped>
-
 .form-group {
-  width: v-bind('width');
   margin: 0 auto;
+  position: relative;
 }
 
 .form-group input {
@@ -89,14 +58,15 @@ async function autoComplete() {
 
 .form-group input:focus {
   outline: none;
-  border-color: #F8B55F;
+  border-color: #f8b55f;
   background-color: #242424;
   box-shadow: 0 0 0 3px rgba(248, 181, 95, 0.46);
 }
 
 .search-form {
+  width: 500px;
   display: flex;
-  max-width: 600px;
+  max-width: 650px;
   margin: 0 auto;
   gap: 0.75rem;
 }
@@ -119,5 +89,33 @@ async function autoComplete() {
 
 .search-form input::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.suggestion-item {
+  cursor: pointer;
+  padding: 5px;
+  transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+  background-color: #2b2b2b;
+}
+
+.search-container {
+  position: relative;
 }
 </style>

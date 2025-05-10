@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import Summoner from '../components/Summoner.vue';
+import SummonerInfos from '../components/SummonerInfos.vue';
 import { getSummonerByRiotId, getSummonerByPuuid } from '../services/otpbuildService';
 import type { Summoner as SummonerType } from '../types';
 
@@ -60,7 +60,7 @@ watch(() => route.params, fetchSummonerData, { deep: true });
     </div>
 
     <div v-else-if="summoner" class="summoner-container">
-      <Summoner :summoner="summoner" />
+      <SummonerInfos :summoner="summoner" />
     </div>
 
     <div v-else class="not-found">

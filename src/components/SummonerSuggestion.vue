@@ -86,8 +86,4 @@ function redirectToSummonerPage() {
   align-items: flex-start;
   font-weight: bolder;
 }
-
-.summoner-suggestion:hover {
-  background-color: #2b2b2b;
-}
 </style>

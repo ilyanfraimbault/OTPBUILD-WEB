@@ -95,7 +95,7 @@ function emptyInput() {
 </script>
 
 <template>
-  <div ref="searchBarRef" class="search-form form-group">
+  <div ref="searchBarRef" class="search-form">
     <input
       v-model="searchInput"
       type="text"
@@ -118,57 +118,5 @@ function emptyInput() {
 </template>
 
 <style scoped>
-.form-group {
-  margin: 0 auto;
-  position: relative;
-  width: 500px;
-}
-
-.search-form input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.search-form input:focus {
-  outline: none;
-  border-color: #e18878;
-  box-shadow: 0 0 5px rgba(225, 136, 120, 0.5);
-  background-color: #242424;
-}
-
-.search-form input {
-  flex: 1;
-  padding: 0.8rem 1.2rem;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  background-color: #1a1a1a;
-  color: rgba(255, 255, 255, 0.87);
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  width: 500px;
-}
-
-.suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  max-height: 400px;
-  overflow-y: auto;
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  z-index: 1000;
-  margin-top: 0.5rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.suggestion-item {
-  cursor: pointer;
-  padding: 5px;
-  transition: background-color 0.2s;
-}
-
-.summoner-suggestion:hover,
-.selected {
-  background-color: #444444;
-}
+@import "@/components/css/search-form.css";
 </style>

@@ -10,19 +10,15 @@ const summoner = ref<SummonerType | null>(null);
 const loading = ref(true);
 const error = ref('');
 
-// Function to fetch summoner data based on route params
 async function fetchSummonerData() {
   loading.value = true;
   error.value = '';
   summoner.value = null;
 
   try {
-    // Check which route parameters are available
     if (route.params.puuid) {
-      // Fetch summoner by PUUID
       summoner.value = await getSummonerByPuuid(route.params.puuid as string);
     } else if (route.params.gameName && route.params.tagLine) {
-      // Fetch summoner by Riot ID
       summoner.value = await getSummonerByRiotId(
         route.params.gameName as string,
         route.params.tagLine as string
@@ -48,11 +44,7 @@ watch(() => route.params, fetchSummonerData, { deep: true });
 
 <template>
   <div class="summoner-view">
-    <div v-if="loading" class="loading">
-      Loading summoner data...
-    </div>
-
-    <div v-else-if="error" class="error">
+    <div v-if="error" class="error">
       <div class="error-content">
         <div class="error-icon">⚠️</div>
         <div class="error-message">{{ error }}</div>
@@ -75,10 +67,10 @@ watch(() => route.params, fetchSummonerData, { deep: true });
   padding: 30px;
 }
 
-.loading, .not-found {
+.not-found {
   text-align: center;
   padding: 2rem;
-  background-color: #f5f5f5;
+  background-color: rgba(245, 245, 245, 0);
   border-radius: 8px;
   margin-bottom: 2rem;
 }
